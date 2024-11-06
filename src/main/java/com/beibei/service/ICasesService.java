@@ -2,6 +2,7 @@ package com.beibei.service;
 
 import com.beibei.entity.dto.Cases;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author Peachlambuct
  * @since 2024-11-03
  */
+@Service
 public interface ICasesService extends IService<Cases> {
 
 }

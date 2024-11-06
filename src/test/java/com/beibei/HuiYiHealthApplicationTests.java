@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.beibei.entity.vo.request.RegisterVO;
+import com.beibei.service.IUsersService;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,6 +16,8 @@ import java.util.Collections;
 
 @SpringBootTest
 class HuiYiHealthApplicationTests {
+    @Resource
+    private IUsersService service;
 
     @Test
     void codeCreate() {
@@ -40,5 +45,10 @@ class HuiYiHealthApplicationTests {
                 })
                 .templateEngine(new FreemarkerTemplateEngine()) // 使用 Freemarker 模板引擎
                 .execute(); // 执行生成
+    }
+
+    @Test
+    void register() {
+        service.register(new RegisterVO("liqiuyu", "123456"));
     }
 }
