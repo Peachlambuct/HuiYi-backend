@@ -7,12 +7,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Peachlambuct

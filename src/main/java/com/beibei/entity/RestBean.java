@@ -3,8 +3,6 @@ package com.beibei.entity;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 import com.beibei.utils.SnowflakeIdGenerator;
-import jakarta.annotation.Resource;
-import org.slf4j.MDC;
 
 import java.util.Optional;
 

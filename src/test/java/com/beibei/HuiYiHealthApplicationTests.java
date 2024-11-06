@@ -1,18 +1,12 @@
 package com.beibei;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
-import com.baomidou.mybatisplus.generator.config.OutputFile;
-import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.beibei.entity.vo.request.RegisterVO;
 import com.beibei.service.IUsersService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.nio.file.Paths;
-import java.sql.Types;
-import java.util.Collections;
 
 @SpringBootTest
 class HuiYiHealthApplicationTests {
@@ -48,7 +42,7 @@ class HuiYiHealthApplicationTests {
     }
 
     @Test
-    void register() {
+    void register() throws Exception {
         service.register(new RegisterVO("liqiuyu", "123456"));
     }
 }
