@@ -2,7 +2,7 @@ package com.beibei.controller;
 
 import com.beibei.entity.RestBean;
 import com.beibei.entity.vo.request.RegisterVO;
-import com.beibei.service.IUsersService;
+import com.beibei.service.UsersService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UsersController {
     @Resource
-    private IUsersService usersService;
+    private UsersService usersService;
 
     @PostMapping("/register")
     public RestBean<Void> register(@RequestBody RegisterVO vo) throws Exception {

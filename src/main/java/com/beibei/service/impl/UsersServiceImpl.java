@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.dto.Users;
 import com.beibei.entity.vo.request.RegisterVO;
 import com.beibei.mapper.UsersMapper;
-import com.beibei.service.IUsersService;
+import com.beibei.service.UsersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements IUsersService, UserDetailsService {
+public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements UsersService, UserDetailsService {
 
     @Resource
     private PasswordEncoder encoder;

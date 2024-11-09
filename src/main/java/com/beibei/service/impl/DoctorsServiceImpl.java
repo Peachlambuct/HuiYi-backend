@@ -2,7 +2,7 @@ package com.beibei.service.impl;
 
 import com.beibei.entity.dto.Doctors;
 import com.beibei.mapper.DoctorsMapper;
-import com.beibei.service.IDoctorsService;
+import com.beibei.service.DoctorsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-11-03
  */
 @Service
-public class DoctorsServiceImpl extends ServiceImpl<DoctorsMapper, Doctors> implements IDoctorsService {
+public class DoctorsServiceImpl extends ServiceImpl<DoctorsMapper, Doctors> implements DoctorsService {
 
 }

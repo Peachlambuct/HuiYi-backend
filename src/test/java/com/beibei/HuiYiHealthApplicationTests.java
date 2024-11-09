@@ -3,7 +3,7 @@ package com.beibei;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.beibei.entity.vo.request.RegisterVO;
-import com.beibei.service.IUsersService;
+import com.beibei.service.UsersService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class HuiYiHealthApplicationTests {
     @Resource
-    private IUsersService service;
+    private UsersService service;
 
     @Test
     void codeCreate() {
@@ -30,7 +30,7 @@ class HuiYiHealthApplicationTests {
                             .xml("mappers"); // 设置 Mapper XML 文件包名
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("appointments", "cases", "check_project", "checks", "doctors", "patients", "users") // 设置需要生成的表名
+                    builder.addInclude("check_projects") // 设置需要生成的表名
                             .entityBuilder()
                             .enableLombok() // 启用 Lombok
                             .enableTableFieldAnnotation() // 启用字段注解

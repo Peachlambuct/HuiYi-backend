@@ -4,7 +4,7 @@ import com.beibei.entity.RestBean;
 import com.beibei.entity.dto.Users;
 import com.beibei.entity.vo.response.AuthorizeVO;
 import com.beibei.filter.JwtAuthenticationFilter;
-import com.beibei.service.IUsersService;
+import com.beibei.service.UsersService;
 import com.beibei.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ public class SecurityConfiguration {
     JwtUtils utils;
 
     @Resource
-    IUsersService service;
+    UsersService service;
 
     /**
      * @param http 配置器

@@ -2,7 +2,7 @@ package com.beibei.service.impl;
 
 import com.beibei.entity.dto.Cases;
 import com.beibei.mapper.CasesMapper;
-import com.beibei.service.ICasesService;
+import com.beibei.service.CasesService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-11-03
  */
 @Service
-public class CasesServiceImpl extends ServiceImpl<CasesMapper, Cases> implements ICasesService {
+public class CasesServiceImpl extends ServiceImpl<CasesMapper, Cases> implements CasesService {
 
 }

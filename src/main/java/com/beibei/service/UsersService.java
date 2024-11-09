@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @since 2024-11-03
  */
 @Service
-public interface IUsersService extends IService<Users> {
+public interface UsersService extends IService<Users> {
     Users findAccountByNameOrEmail(String account);
     void register(RegisterVO vo) throws Exception;
 }

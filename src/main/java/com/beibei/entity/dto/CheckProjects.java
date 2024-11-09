@@ -6,10 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import com.beibei.entity.BaseData;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -17,11 +14,13 @@ import lombok.Setter;
  * </p>
  *
  * @author Peachlambuct
- * @since 2024-11-03
+ * @since 2024-11-09
  */
 @Data
-@TableName("users")
-public class Users implements Serializable, BaseData {
+@AllArgsConstructor
+@NoArgsConstructor
+@TableName("check_projects")
+public class CheckProjects implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -38,21 +37,12 @@ public class Users implements Serializable, BaseData {
     @TableField("deleted_at")
     private LocalDateTime deletedAt;
 
-    @TableField("username")
-    private String username;
+    @TableField("name")
+    private String name;
 
-    @TableField("password")
-    private String password;
+    @TableField("room")
+    private String room;
 
-    @TableField("email")
-    private String email;
-
-    @TableField("role")
-    private String role;
-
-    @TableField("avatar")
-    private String avatar;
-
-    @TableField("status")
-    private Boolean status;
+    @TableField("img")
+    private String img;
 }

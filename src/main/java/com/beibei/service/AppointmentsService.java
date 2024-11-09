@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-11-03
  */
 @Service
-public interface IAppointmentsService extends IService<Appointments> {
+public interface AppointmentsService extends IService<Appointments> {
 
 }

@@ -1,6 +1,6 @@
 package com.beibei.service;
 
-import com.beibei.entity.dto.Cases;
+import com.beibei.entity.dto.Doctors;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-11-03
  */
 @Service
-public interface ICasesService extends IService<Cases> {
+public interface DoctorsService extends IService<Doctors> {
 
 }
