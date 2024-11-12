@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2024-11-09
  */
 @RestController
-@RequestMapping("/api/checkProjects")
+@RequestMapping("/api/checkProject")
 public class CheckProjectsController {
     @Resource
     private CheckProjectsService checkProjectsService;

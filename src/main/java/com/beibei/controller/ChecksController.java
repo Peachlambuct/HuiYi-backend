@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-11-03
  */
 @RestController
-@RequestMapping("/api/checks")
+@RequestMapping("/api/check")
 public class ChecksController {
     @Resource
     private ChecksService checksService;

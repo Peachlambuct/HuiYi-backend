@@ -16,4 +16,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ChecksService extends IService<Checks> {
     void saveCheck(CheckVO checkVO);
+    void finishCheck(Long id);
 }

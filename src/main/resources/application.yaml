@@ -30,3 +30,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 #zuoyi:
 #  api: ZOE-fe8e5d5b-6f5e-46ca-9a02-c9916ce51f95
+
+file:
+  upload-dir: D:\Project\JavaProject\study\HuiYi-health\img

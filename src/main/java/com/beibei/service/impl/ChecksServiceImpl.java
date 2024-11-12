@@ -25,4 +25,11 @@ public class ChecksServiceImpl extends ServiceImpl<ChecksMapper, Checks> impleme
         BeanUtil.copyProperties(checkVO, checks);
         this.save(checks);
     }
+
+    @Override
+    public void finishCheck(Long id) {
+        Checks checks = this.getById(id);
+        checks.setStatus("已检查");
+        this.updateById(checks);
+    }
 }

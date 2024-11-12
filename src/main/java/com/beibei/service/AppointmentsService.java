@@ -2,7 +2,10 @@ package com.beibei.service;
 
 import com.beibei.entity.dto.Appointments;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.beibei.entity.vo.response.DoctorTodayAppoint;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,5 +17,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface AppointmentsService extends IService<Appointments> {
-
 }
