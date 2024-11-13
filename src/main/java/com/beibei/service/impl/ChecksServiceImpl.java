@@ -29,7 +29,7 @@ public class ChecksServiceImpl extends ServiceImpl<ChecksMapper, Checks> impleme
     @Override
     public void finishCheck(Long id) {
         Checks checks = this.getById(id);
-        checks.setStatus("已检查");
+        checks.setStatus("已完成");
         this.updateById(checks);
     }
 }

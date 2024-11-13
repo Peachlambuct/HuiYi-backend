@@ -6,6 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -23,15 +24,19 @@ public class Cases implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @JsonProperty("ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @JsonProperty("CreatedAt")
     @TableField(value = "created_at", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 
+    @JsonProperty("UpdatedAt")
     @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
+    @JsonProperty("DeletedAt")
     @TableField("deleted_at")
     private LocalDateTime deletedAt;
 
