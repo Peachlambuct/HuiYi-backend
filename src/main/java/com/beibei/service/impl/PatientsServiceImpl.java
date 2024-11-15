@@ -1,6 +1,7 @@
 package com.beibei.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.dto.Patients;
 import com.beibei.entity.dto.Users;
 import com.beibei.entity.vo.request.CreatePatientVO;
@@ -33,6 +34,11 @@ public class PatientsServiceImpl extends ServiceImpl<PatientsMapper, Patients> i
     private UsersService usersService;
     @Resource
     private ChecksMapper checksMapper;
+
+    @Override
+    public Patients getPatientByUserId(Long userId) {
+        return this.getOne(new QueryWrapper<Patients>().eq("user_id", userId));
+    }
 
     @Override
     public void createPatient(CreatePatientVO vo, Long userId) {

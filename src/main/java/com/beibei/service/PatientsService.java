@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Service
 public interface PatientsService extends IService<Patients> {
+    Patients getPatientByUserId(Long userId);
     void createPatient(CreatePatientVO vo, Long userId);
     PatientInfoVO getPatientInfo(Long userId);
     void updatePatient(CreatePatientVO vo, Long userId);
