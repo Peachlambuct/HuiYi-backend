@@ -125,9 +125,6 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
         String day = split[2];
 
         List<Appointments> appointments = this.list(new QueryWrapper<Appointments>().eq("year", year).eq("month", month).eq("day", day));
-        if (appointments == null || appointments.isEmpty()) {
-            return List.of();
-        }
         HashSet<Long> timeIds = new HashSet<>();
 
         appointments.forEach(it -> timeIds.add(it.getTimeId()));
@@ -151,7 +148,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
         if (patientId == null) {
             throw new RuntimeException("Patient ID not found for user ID: " + userId);
         }
-        List<AppointmentCardVO> appointmentCards = baseMapper.getAppointmentCardsByUserId(userId);
+        List<AppointmentCardVO> appointmentCards = baseMapper.getAppointmentCardsByUserId(patientId);
         appointmentCards.stream()
                 .filter(it -> !it.isStatus())
                 .forEach(it -> it.setDate(constructDate(it.getYear(), it.getMonth(), it.getDay(), it.getTimeId())));
@@ -174,7 +171,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
     private String constructDate(int year, int month, int day, int timeId) {
         String[] timeMap = {
                 "Unknown", "08:00-09:00", "09:00-10:00", "10:00-11:00", "11:00-12:00",
-                "14:00-15:00", "15:00-16:00", "16:00-17:00"
+                "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00"
         };
 
         String timeRange = (timeId >= 1 && timeId < timeMap.length) ? timeMap[timeId] : "Unknown";

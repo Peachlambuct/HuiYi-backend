@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.dto.Doctors;
 import com.beibei.entity.vo.request.DoctorQuery;
+import com.beibei.entity.vo.response.DoctorCard;
 import com.beibei.entity.vo.response.DoctorTodayAppoint;
 import com.beibei.entity.vo.response.NonFinishCase;
 import com.beibei.mapper.DoctorsMapper;
@@ -51,5 +52,10 @@ public class DoctorsServiceImpl extends ServiceImpl<DoctorsMapper, Doctors> impl
     @Override
     public List<NonFinishCase> getCasesByDoctorIdAndStatus(Long doctorId) {
         return baseMapper.getCasesByDoctorIdAndStatus(doctorId);
+    }
+
+    @Override
+    public List<DoctorCard> findAllDoctors() {
+        return baseMapper.findAllDoctors();
     }
 }

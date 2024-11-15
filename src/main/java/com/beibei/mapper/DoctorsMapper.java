@@ -2,6 +2,7 @@ package com.beibei.mapper;
 
 import com.beibei.entity.dto.Doctors;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.beibei.entity.vo.response.DoctorCard;
 import com.beibei.entity.vo.response.DoctorTodayAppoint;
 import com.beibei.entity.vo.response.NonFinishCase;
 import org.apache.ibatis.annotations.Mapper;
@@ -11,7 +12,7 @@ import java.util.List;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author Peachlambuct
@@ -36,4 +37,9 @@ public interface DoctorsMapper extends BaseMapper<Doctors> {
             "WHERE doctor_id = #{doctorID} AND status = false")
     List<NonFinishCase> getCasesByDoctorIdAndStatus(Long doctorID);
 
+
+    @Select("SELECT doctors.id, doctors.name, doctors.honor, doctors.job_title, doctors.job_type, doctors.phone, users.avatar AS img " +
+            "FROM doctors " +
+            "LEFT JOIN users ON users.id = doctors.user_id")
+    List<DoctorCard> findAllDoctors();
 }

@@ -6,6 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -45,9 +46,11 @@ public class Doctors implements Serializable {
     private String honor;
 
     @TableField("job_title")
+    @JsonProperty("job_title")
     private String jobTitle;
 
     @TableField("job_type")
+    @JsonProperty("job_type")
     private String jobType;
 
     @TableField("phone")

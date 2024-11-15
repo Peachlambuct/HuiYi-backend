@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AdminLoginVO {
     private String username;
-    private String password;
+    private String key;
 }

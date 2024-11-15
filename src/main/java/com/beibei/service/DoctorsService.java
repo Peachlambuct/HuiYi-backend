@@ -3,6 +3,7 @@ package com.beibei.service;
 import com.beibei.entity.dto.Doctors;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.beibei.entity.vo.request.DoctorQuery;
+import com.beibei.entity.vo.response.DoctorCard;
 import com.beibei.entity.vo.response.DoctorTodayAppoint;
 import com.beibei.entity.vo.response.NonFinishCase;
 import org.springframework.stereotype.Service;
@@ -23,4 +24,5 @@ public interface DoctorsService extends IService<Doctors> {
     List<Doctors> queryDoctor(DoctorQuery query);
     List<DoctorTodayAppoint> getAppointmentsByDoctorId(Long doctorID);
     List<NonFinishCase> getCasesByDoctorIdAndStatus(Long doctorId);
+    List<DoctorCard> findAllDoctors();
 }
