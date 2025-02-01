@@ -8,7 +8,6 @@ import com.beibei.entity.vo.request.CaseQuery;
 import com.beibei.entity.vo.request.ResponseCaseInfoVO;
 import com.beibei.service.CasesService;
 import com.beibei.service.PatientsService;
-import com.beibei.service.UsersService;
 import com.beibei.utils.Const;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Peachlambuct
@@ -67,12 +66,14 @@ public class CasesController {
     @GetMapping("/latest")
     public RestBean<Cases> latest(@RequestAttribute(Const.ATTR_USER_ID) Long userId) {
         Long patientId = patientsService.getOne(new QueryWrapper<Patients>().eq("user_id", userId)).getId();
-        List<Cases> list = casesService.list(new QueryWrapper<Cases>().eq("patient_id", patientId).orderByDesc("created_at"));
+        List<Cases> list = casesService
+                .list(new QueryWrapper<Cases>().eq("patient_id", patientId).orderByDesc("created_at"));
         return RestBean.success(list.getFirst());
     }
 
     @PostMapping("/query")
-    public RestBean<List<Cases>> query(@RequestBody CaseQuery query, @RequestAttribute(Const.ATTR_USER_ID) Long userId) {
+    public RestBean<List<Cases>> query(@RequestBody CaseQuery query,
+            @RequestAttribute(Const.ATTR_USER_ID) Long userId) {
         return RestBean.success(casesService.queryCase(query, userId));
     }
 

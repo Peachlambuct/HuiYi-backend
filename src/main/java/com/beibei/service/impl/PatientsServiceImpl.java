@@ -13,16 +13,14 @@ import com.beibei.service.PatientsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.beibei.service.UsersService;
 import jakarta.annotation.Resource;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author Peachlambuct
@@ -64,7 +62,7 @@ public class PatientsServiceImpl extends ServiceImpl<PatientsMapper, Patients> i
         } else {
             patientInfoVO.setSex("女");
         }
-        //根据出生日期计算年龄
+        // 根据出生日期计算年龄
         patientInfoVO.setAge(LocalDateTime.now().getYear() - patients.getBirthday().getYear());
         return patientInfoVO;
     }

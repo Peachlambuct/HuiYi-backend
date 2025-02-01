@@ -1,7 +1,7 @@
 package com.beibei.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.dto.CheckProjects;
 import com.beibei.entity.dto.Doctors;
 import com.beibei.entity.dto.Patients;
@@ -14,8 +14,6 @@ import com.beibei.entity.vo.response.PatientInfoVO;
 import com.beibei.service.*;
 import com.beibei.utils.GenerateRandomKeyUtil;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -66,7 +64,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<CheckProjects> getCheckProjects() {
-        return checkProjectService.list();
+        return checkProjectService.list(new QueryWrapper<CheckProjects>().isNull("deleted_at"));
     }
 
     @Override

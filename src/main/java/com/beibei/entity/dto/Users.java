@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 
 import com.beibei.entity.BaseData;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * <p>

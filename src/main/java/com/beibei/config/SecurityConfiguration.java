@@ -32,7 +32,6 @@ public class SecurityConfiguration {
     @Resource
     JwtAuthenticationFilter jwtAuthenticationFilter;
 
-
     @Resource
     JwtUtils utils;
 
@@ -48,28 +47,26 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(conf -> conf
-                        .requestMatchers("/api/admin/login","/api/admin/getkey","/api/user/reg","/api/auth/**", "/error", "/api/files/**").permitAll()
+                        .requestMatchers("/api/admin/login", "/api/admin/getkey", "/api/user/reg", "/api/auth/**",
+                                "/error", "/api/user/avatar")
+                        .permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .formLogin(conf -> conf
                         .loginProcessingUrl("/api/auth/login")
                         .failureHandler(this::handleProcess)
                         .successHandler(this::handleProcess)
-                        .permitAll()
-                )
+                        .permitAll())
                 .logout(conf -> conf
                         .logoutUrl("/api/auth/logout")
-                        .logoutSuccessHandler(this::onLogoutSuccess)
-                )
+                        .logoutSuccessHandler(this::onLogoutSuccess))
                 .exceptionHandling(conf -> conf
                         .accessDeniedHandler(this::handleProcess)
-                        .authenticationEntryPoint(this::handleProcess)
-                )
+                        .authenticationEntryPoint(this::handleProcess))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(conf -> conf
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -78,27 +75,28 @@ public class SecurityConfiguration {
      * - 登录成功
      * - 登录失败
      * - 未登录拦截/无权限拦截
-     * @param request 请求
-     * @param response 响应
+     *
+     * @param request                   请求
+     * @param response                  响应
      * @param exceptionOrAuthentication 异常或是验证实体
      * @throws IOException 可能的异常
      */
     private void handleProcess(HttpServletRequest request,
-                               HttpServletResponse response,
-                               Object exceptionOrAuthentication) throws IOException {
+            HttpServletResponse response,
+            Object exceptionOrAuthentication) throws IOException {
         response.setContentType("application/json;charset=utf-8");
         PrintWriter writer = response.getWriter();
-        if(exceptionOrAuthentication instanceof AccessDeniedException exception) {
+        if (exceptionOrAuthentication instanceof AccessDeniedException exception) {
             writer.write(RestBean
                     .forbidden(exception.getMessage()).asJsonString());
-        } else if(exceptionOrAuthentication instanceof Exception exception) {
+        } else if (exceptionOrAuthentication instanceof Exception exception) {
             writer.write(RestBean
                     .unauthorized(exception.getMessage()).asJsonString());
-        } else if(exceptionOrAuthentication instanceof Authentication authentication){
+        } else if (exceptionOrAuthentication instanceof Authentication authentication) {
             User user = (User) authentication.getPrincipal();
             Users account = service.findAccountByNameOrEmail(user.getUsername());
             String jwt = utils.createJwt(user, account.getUsername(), account.getId());
-            if(jwt == null) {
+            if (jwt == null) {
                 writer.write(RestBean.forbidden("登录验证频繁，请稍后再试").asJsonString());
             } else {
                 AuthorizeVO vo = account.asViewObject(AuthorizeVO.class, o -> o.setToken(jwt));
@@ -110,18 +108,19 @@ public class SecurityConfiguration {
 
     /**
      * 退出登录处理，将对应的Jwt令牌列入黑名单不再使用
-     * @param request 请求
-     * @param response 响应
+     *
+     * @param request        请求
+     * @param response       响应
      * @param authentication 验证实体
      * @throws IOException 可能的异常
      */
     private void onLogoutSuccess(HttpServletRequest request,
-                                 HttpServletResponse response,
-                                 Authentication authentication) throws IOException {
+            HttpServletResponse response,
+            Authentication authentication) throws IOException {
         response.setContentType("application/json;charset=utf-8");
         PrintWriter writer = response.getWriter();
         String authorization = request.getHeader("Authorization");
-        if(utils.invalidateJwt(authorization)) {
+        if (utils.invalidateJwt(authorization)) {
             writer.write(RestBean.success("退出登录成功").asJsonString());
             return;
         }

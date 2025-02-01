@@ -2,23 +2,17 @@ package com.beibei.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.RestBean;
-import com.beibei.entity.dto.Appointments;
-import com.beibei.entity.dto.Cases;
 import com.beibei.entity.dto.Checks;
 import com.beibei.entity.dto.Doctors;
 import com.beibei.entity.vo.request.DoctorQuery;
 import com.beibei.entity.vo.response.DoctorTodayAppoint;
 import com.beibei.entity.vo.response.NonFinishCase;
-import com.beibei.service.AppointmentsService;
 import com.beibei.service.ChecksService;
 import com.beibei.service.DoctorsService;
-import com.beibei.utils.Const;
 import jakarta.annotation.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +63,8 @@ public class DoctorsController {
     }
 
     @GetMapping("/todayappoint")
-    public RestBean<List<DoctorTodayAppoint>> getAppointmentsByDoctorUserID(@RequestAttribute("userId") Integer userId) {
+    public RestBean<List<DoctorTodayAppoint>> getAppointmentsByDoctorUserID(
+            @RequestAttribute("userId") Integer userId) {
         try {
             Long doctorID = service.getOne(new QueryWrapper<Doctors>().eq("user_id", userId)).getId();
             if (doctorID == null) {
@@ -82,13 +77,12 @@ public class DoctorsController {
             List<DoctorTodayAppoint> todayAppointments = appointments.stream()
                     .peek(appointment -> {
                         appointment.setAge(calculateAge(appointment.getBirthday().toLocalDate()));
-                        appointment.setDate(constructDate(appointment.getYear(), appointment.getMonth(), appointment.getDay(), appointment.getTimeId()));
+                        appointment.setDate(constructDate(appointment.getYear(), appointment.getMonth(),
+                                appointment.getDay(), appointment.getTimeId()));
                     })
-                    .filter(appointment ->
-                            appointment.getYear() == currentDate.getYear() &&
-                                    appointment.getMonth() == currentDate.getMonthValue() &&
-                                    appointment.getDay() == currentDate.getDayOfMonth()
-                    )
+                    .filter(appointment -> appointment.getYear() == currentDate.getYear() &&
+                            appointment.getMonth() == currentDate.getMonthValue() &&
+                            appointment.getDay() == currentDate.getDayOfMonth())
                     .collect(Collectors.toList());
             return RestBean.success(todayAppointments);
         } catch (Exception e) {

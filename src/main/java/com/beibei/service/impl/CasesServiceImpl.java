@@ -11,8 +11,6 @@ import com.beibei.mapper.CasesMapper;
 import com.beibei.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -88,7 +86,8 @@ public class CasesServiceImpl extends ServiceImpl<CasesMapper, Cases> implements
         for (Checks check : checks) {
             checksProjectId.add(check.getCheckProjectId());
         }
-        List<CheckProjects> checkProjects = checkProjectsService.list(new QueryWrapper<CheckProjects>().in("id", checksProjectId));
+        List<CheckProjects> checkProjects = checkProjectsService
+                .list(new QueryWrapper<CheckProjects>().in("id", checksProjectId));
         List<CheckInfo> checkInfos = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

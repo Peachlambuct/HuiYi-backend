@@ -11,15 +11,13 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author Peachlambuct
@@ -27,7 +25,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements UsersService, UserDetailsService {
+public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements UsersService {
 
     @Resource
     private PasswordEncoder encoder;

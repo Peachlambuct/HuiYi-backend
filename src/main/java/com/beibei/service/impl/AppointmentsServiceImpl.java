@@ -10,7 +10,6 @@ import com.beibei.entity.vo.request.ChoosePropVO;
 import com.beibei.entity.vo.request.CreateAppointmentVO;
 import com.beibei.entity.vo.response.AppointmentCardVO;
 import com.beibei.entity.vo.response.AppointmentChoose;
-import com.beibei.entity.vo.response.DoctorTodayAppoint;
 import com.beibei.entity.vo.response.LastAppointmentVO;
 import com.beibei.mapper.AppointmentsMapper;
 import com.beibei.service.AppointmentsService;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-
 /**
  * <p>
  * 服务实现类
@@ -36,7 +34,8 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, Appointments> implements AppointmentsService {
+public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, Appointments>
+        implements AppointmentsService {
     @Resource
     private PatientsService patientsService;
     @Resource
@@ -84,7 +83,8 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
             throw new RuntimeException("Patient ID not found for user ID: " + userId);
         }
 
-        List<AppointmentCardVO> appointmentCards = baseMapper.queryAppointments(query.getFrom(), query.getTo(), patientId, query.getStatus());
+        List<AppointmentCardVO> appointmentCards = baseMapper.queryAppointments(query.getFrom(), query.getTo(),
+                patientId, query.getStatus());
 
         for (AppointmentCardVO card : appointmentCards) {
             card.setDate(constructDate(card.getYear(), card.getMonth(), card.getDay(), card.getTimeId()));
@@ -124,7 +124,8 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
         String month = split[1];
         String day = split[2];
 
-        List<Appointments> appointments = this.list(new QueryWrapper<Appointments>().eq("year", year).eq("month", month).eq("day", day));
+        List<Appointments> appointments = this
+                .list(new QueryWrapper<Appointments>().eq("year", year).eq("month", month).eq("day", day));
         HashSet<Long> timeIds = new HashSet<>();
 
         appointments.forEach(it -> timeIds.add(it.getTimeId()));
