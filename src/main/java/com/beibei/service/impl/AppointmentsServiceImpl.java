@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.dto.Appointments;
 import com.beibei.entity.dto.Cases;
 import com.beibei.entity.dto.Patients;
+import com.beibei.entity.dto.Users;
 import com.beibei.entity.vo.request.AppointQuery;
 import com.beibei.entity.vo.request.ChoosePropVO;
 import com.beibei.entity.vo.request.CreateAppointmentVO;
@@ -16,6 +17,8 @@ import com.beibei.service.AppointmentsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.beibei.service.CasesService;
 import com.beibei.service.PatientsService;
+import com.beibei.service.UsersService;
+
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,8 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
     private PatientsService patientsService;
     @Resource
     private CasesService casesService;
+    @Resource
+    private UsersService usersService;
 
     @Override
     public void increase(CreateAppointmentVO vo, Long userId) {
@@ -54,6 +59,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
         appointments.setYear(year);
         appointments.setMonth(month);
         appointments.setDay(day);
+        appointments.setStatus(false);
         this.save(appointments);
 
         // 创建一个新的病例记录，初始状态为0
@@ -67,7 +73,15 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
 
     @Override
     public List<AppointmentCardVO> getAppointmentCardVOListByUserId(Long userId) {
-        List<AppointmentCardVO> appointmentCards = baseMapper.getAppointmentCardsByUserId(userId);
+        Users user = usersService.getById(userId);
+        if (user == null) {
+            throw new RuntimeException("User not found for ID: " + userId);
+        }
+        Patients patient = patientsService.getPatientByUserId(userId);
+        if (patient == null) {
+            throw new RuntimeException("Patient not found for ID: " + userId);
+        }
+        List<AppointmentCardVO> appointmentCards = baseMapper.getAppointmentCardsByUserId(patient.getId());
 
         for (AppointmentCardVO card : appointmentCards) {
             card.setDate(constructDate(card.getYear(), card.getMonth(), card.getDay(), card.getTimeId()));
@@ -83,8 +97,23 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
             throw new RuntimeException("Patient ID not found for user ID: " + userId);
         }
 
-        List<AppointmentCardVO> appointmentCards = baseMapper.queryAppointments(query.getFrom(), query.getTo(),
-                patientId, query.getStatus());
+        // 构建查询条件
+        QueryWrapper<Appointments> wrapper = new QueryWrapper<>();
+        wrapper
+                .eq("appointments.patient_id", patientId)
+                .isNull("appointments.deleted_at");
+        if (query.getStatus() != null) {
+            wrapper.eq("appointments.status", query.getStatus());
+        }
+        if (query.getFrom() != null) {
+            wrapper.ge("appointments.created_at", query.getFrom());
+        }
+
+        if (query.getTo() != null) {
+            wrapper.le("appointments.created_at", query.getTo());
+        }
+
+        List<AppointmentCardVO> appointmentCards = baseMapper.queryAppointments(wrapper);
 
         for (AppointmentCardVO card : appointmentCards) {
             card.setDate(constructDate(card.getYear(), card.getMonth(), card.getDay(), card.getTimeId()));
@@ -125,7 +154,8 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
         String day = split[2];
 
         List<Appointments> appointments = this
-                .list(new QueryWrapper<Appointments>().eq("year", year).eq("month", month).eq("day", day));
+                .list(new QueryWrapper<Appointments>().eq("year", year).eq("month", month).eq("day", day)
+                        .isNull("deleted_at"));
         HashSet<Long> timeIds = new HashSet<>();
 
         appointments.forEach(it -> timeIds.add(it.getTimeId()));

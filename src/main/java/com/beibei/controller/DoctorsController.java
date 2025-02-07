@@ -99,9 +99,14 @@ public class DoctorsController {
             }
 
             List<NonFinishCase> nonFinishCases = service.getCasesByDoctorIdAndStatus(doctorID);
+            nonFinishCases = nonFinishCases.stream().peek(it -> {
+                it.setAge(calculateAge(it.getBirthday().toLocalDate()));
+            }).collect(Collectors.toList());
             return RestBean.success(nonFinishCases);
+
         } catch (Exception e) {
             return RestBean.error(e);
+
         }
     }
 

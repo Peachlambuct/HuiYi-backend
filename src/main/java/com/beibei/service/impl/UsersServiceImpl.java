@@ -8,6 +8,7 @@ import com.beibei.mapper.UsersMapper;
 import com.beibei.service.UsersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +37,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     }
 
     @Override
-    public void register(RegisterVO vo) throws Exception {
+    @SneakyThrows
+    public void register(RegisterVO vo) {
         if (StrUtil.isBlank(vo.getUsername()) || StrUtil.isBlank(vo.getPassword())) {
             throw new Exception("用户名和密码不能为空");
         }
