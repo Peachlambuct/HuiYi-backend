@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author Peachlambuct
@@ -21,8 +21,20 @@ import java.util.List;
 @Service
 public interface DoctorsService extends IService<Doctors> {
     List<String> getJobTypes();
+
     List<Doctors> queryDoctor(DoctorQuery query);
+
     List<DoctorTodayAppoint> getAppointmentsByDoctorId(Long doctorID);
+
     List<NonFinishCase> getCasesByDoctorIdAndStatus(Long doctorId);
+
     List<DoctorCard> findAllDoctors();
+
+    /**
+     * 根据用户ID获取医生信息
+     *
+     * @param userId 用户ID
+     * @return 医生信息
+     */
+    Doctors getDoctorByUserId(Long userId);
 }

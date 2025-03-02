@@ -1,5 +1,6 @@
 package com.beibei.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.RestBean;
 import com.beibei.entity.dto.Cases;
@@ -68,6 +69,9 @@ public class CasesController {
         Long patientId = patientsService.getOne(new QueryWrapper<Patients>().eq("user_id", userId)).getId();
         List<Cases> list = casesService
                 .list(new QueryWrapper<Cases>().eq("patient_id", patientId).orderByDesc("created_at"));
+        if (CollUtil.isEmpty(list)) {
+            return RestBean.success();
+        }
         return RestBean.success(list.getFirst());
     }
 

@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.RestBean;
 import com.beibei.entity.dto.Checks;
 import com.beibei.entity.dto.Doctors;
+import com.beibei.entity.dto.Users;
 import com.beibei.entity.vo.request.DoctorQuery;
 import com.beibei.entity.vo.response.DoctorTodayAppoint;
 import com.beibei.entity.vo.response.NonFinishCase;
 import com.beibei.service.ChecksService;
 import com.beibei.service.DoctorsService;
+import com.beibei.service.UsersService;
+import com.beibei.utils.Const;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +36,8 @@ public class DoctorsController {
     private DoctorsService service;
     @Resource
     private ChecksService checksService;
+    @Resource
+    private UsersService usersService;
 
     @PostMapping("/create")
     public RestBean<Void> createDoctor(Doctors doctors) {
@@ -108,6 +113,20 @@ public class DoctorsController {
             return RestBean.error(e);
 
         }
+    }
+
+    @GetMapping("/info")
+    public RestBean<Doctors> getDoctorInfo(@RequestAttribute(Const.ATTR_USER_ID) Long userId) {
+        Doctors doctor = service.getDoctorByUserId(userId);
+        return RestBean.success(doctor);
+    }
+
+    @GetMapping("/getDoctorInfo")
+    public RestBean<Doctors> getDoctorInfoById(@RequestParam Long doctorId) {
+        Doctors doctor = service.getById(doctorId);
+        Users byId = usersService.getById(doctor.getUserId());
+        doctor.setAvatar(byId.getAvatar());
+        return RestBean.success(doctor);
     }
 
     private int calculateAge(LocalDate birthday) {

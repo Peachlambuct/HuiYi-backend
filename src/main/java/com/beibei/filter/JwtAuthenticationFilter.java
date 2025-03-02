@@ -33,7 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
-        // String uri = request.getRequestURI(); // 目前没啥用
         DecodedJWT jwt = utils.resolveJwt(authorization);
         if (jwt != null) {
             UserDetails user = utils.toUser(jwt);

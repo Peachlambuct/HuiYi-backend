@@ -57,4 +57,17 @@ public class DoctorsServiceImpl extends ServiceImpl<DoctorsMapper, Doctors> impl
     public List<DoctorCard> findAllDoctors() {
         return baseMapper.findAllDoctors();
     }
+
+    @Override
+    public Doctors getDoctorByUserId(Long userId) {
+        QueryWrapper<Doctors> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        Doctors doctor = this.getOne(wrapper);
+
+        if (doctor == null) {
+            throw new RuntimeException("医生信息不存在");
+        }
+
+        return doctor;
+    }
 }

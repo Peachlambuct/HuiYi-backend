@@ -54,6 +54,9 @@ public class PatientsServiceImpl extends ServiceImpl<PatientsMapper, Patients> i
     public PatientInfoVO getPatientInfo(Long userId) {
         Users user = usersService.getById(userId);
         Patients patients = this.lambdaQuery().eq(Patients::getUserId, userId).one();
+        if (patients == null) {
+            return null;
+        }
         PatientInfoVO patientInfoVO = new PatientInfoVO();
         BeanUtil.copyProperties(patients, patientInfoVO);
         BeanUtil.copyProperties(user, patientInfoVO);

@@ -55,4 +55,7 @@ public class Doctors implements Serializable {
 
     @TableField("phone")
     private String phone;
+
+    @TableField(exist = false)
+    private String avatar;
 }
