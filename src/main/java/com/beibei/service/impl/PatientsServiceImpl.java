@@ -51,9 +51,29 @@ public class PatientsServiceImpl extends ServiceImpl<PatientsMapper, Patients> i
     }
 
     @Override
-    public PatientInfoVO getPatientInfo(Long userId) {
+    public PatientInfoVO getPatientInfo(Long pid) {
+        Patients patients = this.getById(pid);
+        if (patients == null) {
+            return null;
+        }
+        Users user = usersService.getById(patients.getUserId());
+        PatientInfoVO patientInfoVO = new PatientInfoVO();
+        BeanUtil.copyProperties(patients, patientInfoVO);
+        BeanUtil.copyProperties(user, patientInfoVO);
+        if (patients.getSex()) {
+            patientInfoVO.setSex("男");
+        } else {
+            patientInfoVO.setSex("女");
+        }
+        // 根据出生日期计算年龄
+        patientInfoVO.setAge(LocalDateTime.now().getYear() - patients.getBirthday().getYear());
+        return patientInfoVO;
+    }
+
+    @Override
+    public PatientInfoVO getPatientInfoByUserId(Long userId) {
         Users user = usersService.getById(userId);
-        Patients patients = this.lambdaQuery().eq(Patients::getUserId, userId).one();
+        Patients patients = this.getOne(new QueryWrapper<Patients>().eq("user_id", userId));
         if (patients == null) {
             return null;
         }
@@ -69,6 +89,8 @@ public class PatientsServiceImpl extends ServiceImpl<PatientsMapper, Patients> i
         patientInfoVO.setAge(LocalDateTime.now().getYear() - patients.getBirthday().getYear());
         return patientInfoVO;
     }
+
+
 
     @Override
     public void updatePatient(CreatePatientVO vo, Long userId) {

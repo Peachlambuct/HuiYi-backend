@@ -40,19 +40,19 @@ public class DoctorsController {
     private UsersService usersService;
 
     @PostMapping("/create")
-    public RestBean<Void> createDoctor(Doctors doctors) {
+    public RestBean<Void> createDoctor(@RequestBody Doctors doctors) {
         service.save(doctors);
         return RestBean.success();
     }
 
     @PostMapping("/update")
-    public RestBean<Void> updateDoctor(Doctors doctors) {
+    public RestBean<Void> updateDoctor(@RequestBody Doctors doctors) {
         service.updateById(doctors);
         return RestBean.success();
     }
 
     @PostMapping("/add")
-    public RestBean<Void> addCheck(Checks checks) {
+    public RestBean<Void> addCheck(@RequestBody Checks checks) {
         checksService.save(checks);
         return RestBean.success();
     }
@@ -142,7 +142,7 @@ public class DoctorsController {
         timeMap.put(5, "14:00-15:00");
         timeMap.put(6, "15:00-16:00");
         timeMap.put(7, "16:00-17:00");
-        // Add more mappings as needed
+        timeMap.put(8, "17:00-18:00");
 
         String timeRange = timeMap.getOrDefault(timeId, "Unknown");
 

@@ -28,6 +28,10 @@ public class Cases implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    @JsonProperty("aid")
+    @TableField(value = "aid")
+    private Long aid;
+
     @JsonProperty("CreatedAt")
     @TableField(value = "created_at", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;

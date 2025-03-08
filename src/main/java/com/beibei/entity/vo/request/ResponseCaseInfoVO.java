@@ -26,6 +26,7 @@ public class ResponseCaseInfoVO {
     private Long patientId;
     private boolean sex;
     private int age;
+    @JsonProperty("doctor_type")
     private String doctorType;
     private String date;
     private Long doctorId;

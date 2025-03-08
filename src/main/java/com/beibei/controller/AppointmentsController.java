@@ -1,7 +1,9 @@
 package com.beibei.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.beibei.entity.RestBean;
 import com.beibei.entity.dto.Appointments;
+import com.beibei.entity.dto.Cases;
 import com.beibei.entity.vo.request.AppointQuery;
 import com.beibei.entity.vo.request.ChoosePropVO;
 import com.beibei.entity.vo.request.CreateAppointmentVO;
@@ -10,9 +12,11 @@ import com.beibei.entity.vo.response.AppointmentCardVO;
 import com.beibei.entity.vo.response.AppointmentChoose;
 import com.beibei.entity.vo.response.LastAppointmentVO;
 import com.beibei.service.AppointmentsService;
+import com.beibei.service.CasesService;
 import com.beibei.utils.Const;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -31,6 +35,8 @@ import java.util.List;
 public class AppointmentsController {
     @Resource
     private AppointmentsService appointmentsService;
+    @Resource
+    private CasesService casesService;
 
     @PostMapping("/increase")
     public RestBean<Void> increase(@RequestBody CreateAppointmentVO vo, @RequestAttribute(Const.ATTR_USER_ID) Long userId) {
@@ -43,6 +49,7 @@ public class AppointmentsController {
         return RestBean.success(appointmentsService.getAppointmentCardVOListByUserId(userId));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @GetMapping("/delete")
     public RestBean<Void> delete(@RequestParam("id") Long id) {
         Appointments appointments = appointmentsService.getById(id);
@@ -51,6 +58,11 @@ public class AppointmentsController {
         }
         appointments.setDeletedAt(LocalDateTime.now());
         appointmentsService.saveOrUpdate(appointments);
+        Cases one = casesService.getOne(new LambdaQueryWrapper<Cases>().eq(Cases::getAid, appointments.getId()));
+        if (one != null) {
+            one.setDeletedAt(LocalDateTime.now());
+            casesService.saveOrUpdate(one);
+        }
         return RestBean.success();
     }
 

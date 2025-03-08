@@ -9,10 +9,11 @@ import java.util.Date;
  */
 @Data
 public class AuthorizeVO {
-    String username;
-    String userEmail;
-    String token;
-    String role;
-    boolean status;
-    Date expire;
+    private Long id;
+    private String username;
+    private String userEmail;
+    private String token;
+    private String role;
+    private boolean status;
+    private Date expire;
 }

@@ -7,10 +7,13 @@ import com.beibei.entity.dto.Cases;
 import com.beibei.entity.dto.Patients;
 import com.beibei.entity.vo.request.CaseQuery;
 import com.beibei.entity.vo.request.ResponseCaseInfoVO;
+import com.beibei.entity.vo.response.CaseInfoVO;
+import com.beibei.entity.vo.response.PatientInfoVO;
 import com.beibei.service.CasesService;
 import com.beibei.service.PatientsService;
 import com.beibei.utils.Const;
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -52,6 +55,16 @@ public class CasesController {
         return RestBean.success();
     }
 
+    @GetMapping("/getById")
+    public RestBean<CaseInfoVO> getById(@RequestParam Integer id) {
+        Cases cases = casesService.getById(id);
+        PatientInfoVO patientInfo = patientsService.getPatientInfo(cases.getPatientId());
+        CaseInfoVO caseInfoVO = new CaseInfoVO();
+        BeanUtils.copyProperties(cases, caseInfoVO);
+        caseInfoVO.setPatientInfoVO(patientInfo);
+        return RestBean.success(caseInfoVO);
+    }
+
     @PostMapping("/update")
     public RestBean<Void> update(@RequestBody ResponseCaseInfoVO vo) {
         casesService.updateCase(vo);
@@ -59,9 +72,8 @@ public class CasesController {
     }
 
     @GetMapping("/info")
-    public RestBean<Void> info(@RequestParam("id") Integer id) {
-        casesService.getById(id);
-        return RestBean.success();
+    public RestBean<CaseInfoVO> getInfo(@RequestParam("case_id") Long caseId) {
+        return RestBean.success(casesService.getCaseInfo(caseId));
     }
 
     @GetMapping("/latest")
@@ -83,6 +95,6 @@ public class CasesController {
 
     @GetMapping("/details")
     public RestBean<ResponseCaseInfoVO> details(@RequestParam("case_id") Long caseId) {
-        return RestBean.success(casesService.getCaseInfo(caseId));
+        return RestBean.success(casesService.getResponseCaseInfo(caseId));
     }
 }

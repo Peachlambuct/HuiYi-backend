@@ -1,12 +1,15 @@
 package com.beibei.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.beibei.entity.dto.*;
 import com.beibei.entity.vo.request.CaseQuery;
 import com.beibei.entity.vo.request.CheckInfo;
 import com.beibei.entity.vo.request.ResponseCaseInfoVO;
+import com.beibei.entity.vo.response.CaseInfoVO;
+import com.beibei.entity.vo.response.CheckItemVO;
 import com.beibei.mapper.CasesMapper;
 import com.beibei.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -63,13 +66,15 @@ public class CasesServiceImpl extends ServiceImpl<CasesMapper, Cases> implements
     }
 
     @Override
-    public ResponseCaseInfoVO getCaseInfo(Long id) {
+    public ResponseCaseInfoVO getResponseCaseInfo(Long id) {
         Cases cases = this.getById(id);
         Doctors doctors = doctorsService.getById(cases.getDoctorId());
         Patients patients = patientsService.getById(cases.getPatientId());
         ResponseCaseInfoVO responseCaseInfoVO = new ResponseCaseInfoVO();
         BeanUtil.copyProperties(cases, responseCaseInfoVO);
-        if (StrUtil.isBlank(cases.getCheckId())) {
+
+        List<Checks> checks = checksService.list(new QueryWrapper<Checks>().eq("case_id", cases.getId()));
+        if (CollUtil.isEmpty(checks)) {
             responseCaseInfoVO.setDoctorName(doctors.getName());
             responseCaseInfoVO.setDoctorId(doctors.getId());
             responseCaseInfoVO.setDoctorType(doctors.getJobType());
@@ -80,8 +85,6 @@ public class CasesServiceImpl extends ServiceImpl<CasesMapper, Cases> implements
             responseCaseInfoVO.setPatientId(patients.getId());
             return responseCaseInfoVO;
         }
-        List<String> checkId = Arrays.stream(cases.getCheckId().split(",")).toList();
-        List<Checks> checks = checksService.list(new QueryWrapper<Checks>().in("id", checkId));
         HashSet<Long> checksProjectId = new HashSet<>();
         for (Checks check : checks) {
             checksProjectId.add(check.getCheckProjectId());
@@ -125,5 +128,82 @@ public class CasesServiceImpl extends ServiceImpl<CasesMapper, Cases> implements
 
     private int calculateAge(LocalDate birthday) {
         return LocalDate.now().getYear() - birthday.getYear();
+    }
+
+    @Override
+    public CaseInfoVO getCaseInfo(Long caseId) {
+        // 获取病例信息
+        Cases cases = this.getById(caseId);
+        if (cases == null) {
+            throw new RuntimeException("病例不存在");
+        }
+
+        // 获取医生信息
+        Doctors doctor = doctorsService.getById(cases.getDoctorId());
+        if (doctor == null) {
+            throw new RuntimeException("医生信息不存在");
+        }
+
+        // 获取患者信息
+        Patients patient = patientsService.getById(cases.getPatientId());
+        if (patient == null) {
+            throw new RuntimeException("患者信息不存在");
+        }
+
+        // 计算患者年龄
+        int age = calculateAge(patient.getBirthday().toLocalDate());
+
+        // 获取检查项目
+        List<CheckItemVO> checkItems = new ArrayList<>();
+        if (cases.getCheckId() != null && !cases.getCheckId().isEmpty()) {
+            String[] checkIds = cases.getCheckId().split(",");
+            for (String checkId : checkIds) {
+                if (checkId.isEmpty())
+                    continue;
+                try {
+                    Long id = Long.parseLong(checkId);
+                    Checks check = checksService.getById(id);
+                    if (check != null) {
+                        // 获取检查项目信息
+                        CheckProjects project = checkProjectsService.getById(check.getCheckProjectId());
+                        if (project != null) {
+                            CheckItemVO item = new CheckItemVO();
+                            item.setName(project.getName());
+                            item.setRoom(project.getRoom());
+                            item.setImg(project.getImg() != null ? project.getImg() : "");
+                            item.setStatus(check.getStatus());
+                            item.setTime(check.getCreatedAt() != null
+                                    ? check.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                                    : "");
+                            checkItems.add(item);
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    // 忽略无效的检查ID
+                }
+            }
+        }
+
+        // 构建返回结果
+        CaseInfoVO result = new CaseInfoVO();
+        result.setId(caseId); // 使用Long类型
+        result.setTitle(cases.getTitle());
+        result.setDoctorName(doctor.getName());
+        result.setDoctorType(doctor.getJobType());
+        result.setDoctorId(doctor.getId()); // 使用Long类型
+        result.setDoctorIdStr(doctor.getId().toString()); // 设置String类型的ID
+        result.setCheckProject(checkItems);
+        result.setContent(cases.getContent());
+        result.setSex(patient.getSex());
+        result.setPatientName(patient.getName());
+        result.setPatientId(patient.getId()); // 使用Long类型
+        result.setPatientIdStr(patient.getId().toString()); // 设置String类型的ID
+        result.setAge(age);
+        result.setDate(cases.getCreatedAt() != null
+                ? cases.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                : "");
+        result.setCheckId(cases.getCheckId());
+
+        return result;
     }
 }

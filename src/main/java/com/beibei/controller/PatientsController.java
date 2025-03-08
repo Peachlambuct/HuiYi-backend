@@ -36,7 +36,7 @@ public class PatientsController {
 
     @GetMapping("/info")
     public RestBean<PatientInfoVO> getPatientInfo(@RequestAttribute(Const.ATTR_USER_ID) Long userId) {
-        return RestBean.success(patientsService.getPatientInfo(userId));
+        return RestBean.success(patientsService.getPatientInfoByUserId(userId));
     }
 
     @PostMapping("/update")

@@ -17,6 +17,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -87,6 +88,16 @@ public class AdminServiceImpl implements AdminService {
             PatientInfoVO patientInfoVO = new PatientInfoVO();
             BeanUtil.copyProperties(patient, patientInfoVO);
             patientInfoVO.setSex(patient.getSex() ? "男" : "女");
+            if (patient.getBirthday() != null) {
+                LocalDate birthDate = patient.getBirthday().toLocalDate();
+                int age = LocalDate.now().getYear() - birthDate.getYear();
+                if (birthDate.getMonthValue() > LocalDate.now().getMonthValue() ||
+                        (birthDate.getMonthValue() == LocalDate.now().getMonthValue() &&
+                                birthDate.getDayOfMonth() > LocalDate.now().getDayOfMonth())) {
+                    age--;
+                }
+                patientInfoVO.setAge(age);
+            }
             return patientInfoVO;
         }).toList();
     }

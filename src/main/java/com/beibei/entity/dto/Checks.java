@@ -44,6 +44,9 @@ public class Checks implements Serializable {
     @TableField("doctor_id")
     private Long doctorId;
 
+    @TableField("case_id")
+    private Long caseId;
+
     @TableField("status")
     private String status;
 }

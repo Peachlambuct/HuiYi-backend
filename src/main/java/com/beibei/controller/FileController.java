@@ -31,13 +31,7 @@ public class FileController {
     @Resource
     private UsersService userService;
 
-    @Resource
-    private UsersService usersService;
-
-    @Resource
-    private JwtUtils jwtUtils;
-
-    @PostMapping("/upload")
+    @PostMapping("/upload-avatar")
     public RestBean<String> uploadAvatar(@RequestParam("file") MultipartFile file,
             @RequestAttribute(Const.ATTR_USER_ID) int userId) {
         if (file.isEmpty()) {
@@ -75,7 +69,7 @@ public class FileController {
         return RestBean.success(dest.getName());
     }
 
-    @PostMapping("/upload-avatar-create")
+    @PostMapping("/upload")
     public RestBean<String> Create(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return RestBean.error(new IOException("File is empty"));
@@ -128,54 +122,6 @@ public class FileController {
         } catch (IOException e) {
             log.error("Error reading or writing image file", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/avatar")
-    public void getAvatar(@RequestParam("token") String token, HttpServletResponse response) {
-        DecodedJWT decodedJWT = jwtUtils.resolveJwt(token);
-        if (decodedJWT == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-        Integer id = jwtUtils.toId(decodedJWT);
-        try {
-            Users user = usersService.getById(id);
-            if (user == null || user.getAvatar() == null) {
-                // 不要返回 JSON，而是返回 404 状态码
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-
-            File file = new File(uploadDir, user.getAvatar());
-            if (!file.exists()) {
-                // 同样，只返回状态码
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return;
-            }
-
-            // 确保设置正确的 Content-Type
-            String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-            if (mimeType == null || !mimeType.startsWith("image/")) {
-                mimeType = "image/jpeg"; // 设置默认的图片类型
-            }
-            response.setContentType(mimeType);
-
-            // 添加一些缓存相关的头信息
-            response.setHeader("Cache-Control", "public, max-age=31536000");
-
-            try (FileInputStream fis = new FileInputStream(file);
-                    ServletOutputStream os = response.getOutputStream()) {
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = fis.read(buffer)) != -1) {
-                    os.write(buffer, 0, bytesRead);
-                }
-                os.flush();
-            }
-        } catch (Exception e) {
-            log.error("Error serving avatar", e);
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND); // 出错时返回 404，而不是 JSON
         }
     }
 }

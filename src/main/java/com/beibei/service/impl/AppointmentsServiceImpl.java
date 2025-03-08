@@ -22,6 +22,7 @@ import com.beibei.service.UsersService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,6 +47,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
     @Resource
     private UsersService usersService;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void increase(CreateAppointmentVO vo, Long userId) {
         String[] split = vo.getTime().split("-");
@@ -67,6 +69,7 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
         cases.setStatus(false);
         cases.setDoctorId(vo.getDoctorId());
         cases.setPatientId(patientId.getId());
+        cases.setAid(appointments.getId());
         casesService.save(cases);
         log.info("用户{}预约了医生{}，时间为{}-{}-{}", userId, vo.getDoctorId(), year, month, day);
     }

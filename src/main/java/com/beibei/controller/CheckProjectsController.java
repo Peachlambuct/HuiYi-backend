@@ -29,9 +29,15 @@ public class CheckProjectsController {
         return RestBean.success(list);
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public RestBean<Void> create(@RequestBody CheckProjects checkProjects) {
         checkProjectsService.save(checkProjects);
+        return RestBean.success();
+    }
+
+    @PostMapping("/update")
+    public RestBean<Void> update(@RequestBody CheckProjects checkProjects) {
+        checkProjectsService.updateById(checkProjects);
         return RestBean.success();
     }
 }

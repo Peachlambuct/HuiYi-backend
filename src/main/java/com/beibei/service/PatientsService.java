@@ -22,6 +22,7 @@ public interface PatientsService extends IService<Patients> {
     Patients getPatientByUserId(Long userId);
     void createPatient(CreatePatientVO vo, Long userId);
     PatientInfoVO getPatientInfo(Long userId);
+    PatientInfoVO getPatientInfoByUserId(Long userId);
     void updatePatient(CreatePatientVO vo, Long userId);
     List<CheckInfoVO> getCheckInfo(Long userId);
 }

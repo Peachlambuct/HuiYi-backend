@@ -1,6 +1,7 @@
 package com.beibei.controller;
 
 import com.beibei.entity.RestBean;
+import com.beibei.entity.vo.request.AddCheckVO;
 import com.beibei.entity.vo.request.CheckVO;
 import com.beibei.service.ChecksService;
 import jakarta.annotation.Resource;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Peachlambuct
@@ -26,6 +27,12 @@ public class ChecksController {
     @PostMapping("/add")
     public RestBean<Void> addCheck(@RequestBody CheckVO checkVO) {
         checksService.saveCheck(checkVO);
+        return RestBean.success();
+    }
+
+    @PostMapping("/addCheck")
+    public RestBean<Void> addCheck(@RequestBody AddCheckVO checkVO) {
+        checksService.addCheck(checkVO);
         return RestBean.success();
     }
 }

@@ -2,6 +2,7 @@ package com.beibei.service;
 
 import com.beibei.entity.dto.Checks;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.beibei.entity.vo.request.AddCheckVO;
 import com.beibei.entity.vo.request.CheckVO;
 import org.springframework.stereotype.Service;
 
@@ -17,4 +18,5 @@ import org.springframework.stereotype.Service;
 public interface ChecksService extends IService<Checks> {
     void saveCheck(CheckVO checkVO);
     void finishCheck(Long id);
+    void addCheck(AddCheckVO checkVO);
 }

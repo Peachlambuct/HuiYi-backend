@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class CheckVO {
     private Long doctorId;
     private Long patientId;
-    private Long checkProjectId;;
+    private Long checkProjectId;
     private String Status;
 }
