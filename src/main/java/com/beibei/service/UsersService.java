@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author Peachlambuct
@@ -17,5 +17,12 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UsersService extends IService<Users>, UserDetailsService {
     Users findAccountByNameOrEmail(String account);
+
     void register(RegisterVO vo) throws Exception;
+
+    /**
+     * 删除非管理员用户
+     * 在重置系统数据时使用
+     */
+    void removeNonAdminUsers();
 }

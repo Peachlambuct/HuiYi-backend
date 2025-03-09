@@ -6,10 +6,14 @@ import com.beibei.entity.dto.Users;
 import com.beibei.entity.vo.request.RegisterVO;
 import com.beibei.entity.vo.request.UpdatePasswordVO;
 import com.beibei.entity.vo.response.AuthorizeVO;
+import com.beibei.mapper.UsersMapper;
+import com.beibei.service.SystemSettingsService;
 import com.beibei.service.UsersService;
 import com.beibei.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -31,6 +35,10 @@ public class UsersController {
     private UsersService usersService;
     @Resource
     private JwtUtils utils;
+    @Resource
+    private SystemSettingsService systemSettingsService;
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     public RestBean<Void> register(@RequestBody RegisterVO vo) throws Exception {
@@ -40,8 +48,13 @@ public class UsersController {
 
     @PostMapping("/reg")
     public RestBean<AuthorizeVO> reg(@RequestBody RegisterVO vo) throws Exception {
+        String setting = systemSettingsService.getSetting("allow_register", "true");
         Users user = usersService.getOne(new QueryWrapper<Users>().eq("username", vo.getUsername()));
         if (user != null) {
+            if (!passwordEncoder.matches(vo.getPassword(), user.getPassword())) {
+                // 密码不匹配，拒绝登录
+                return RestBean.failure(401, "用户名或密码错误");
+            }
             UserDetails userDetails = usersService.loadUserByUsername(vo.getUsername());
             String jwt = utils.createJwt(userDetails, user.getUsername(), user.getId());
             if (jwt == null) {
@@ -51,14 +64,17 @@ public class UsersController {
                 authorizeVO.setExpire(utils.expireTime());
                 return RestBean.success(authorizeVO);
             }
-        } else {
+        } else if (setting.equals("true")) {
             usersService.register(vo);
+        } else {
+            throw new UsernameNotFoundException("用户名或密码错误");
         }
         return RestBean.success();
     }
 
     @PostMapping("/update")
-    public RestBean<Void> updatePassword(@RequestBody UpdatePasswordVO vo, @RequestAttribute(Const.ATTR_USER_ID) Integer userId) {
+    public RestBean<Void> updatePassword(@RequestBody UpdatePasswordVO vo,
+            @RequestAttribute(Const.ATTR_USER_ID) Integer userId) {
         Users user = usersService.getById(userId);
         if (Objects.equals(user.getPassword(), vo.getOldPassword())) {
             user.setPassword(vo.getNewPassword());

@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.beibei.entity.vo.response.AppointmentCardVO;
 import com.beibei.entity.vo.response.LastAppointmentVO;
+import com.beibei.entity.vo.response.AppointmentStatsVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -51,4 +53,31 @@ public interface AppointmentsMapper extends BaseMapper<Appointments> {
                         "ORDER BY appointments.created_at DESC " +
                         "LIMIT 1")
         LastAppointmentVO getLatestAppointmentByPatientId(@Param("patientId") Long patientId);
+
+        /**
+         * 获取今日预约统计
+         */
+        @Select("SELECT COUNT(*) as total, " +
+                        "SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as completed, " +
+                        "SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as pending " +
+                        "FROM appointments " +
+                        "WHERE deleted_at IS NULL " +
+                        "AND year = #{year} AND month = #{month} AND day = #{day}")
+        AppointmentStatsVO getAppointmentStats(@Param("year") String year,
+                        @Param("month") String month,
+                        @Param("day") String day);
+
+        /**
+         * 获取每周预约分布
+         */
+        @Select("SELECT " +
+                        "DAYOFWEEK(CONCAT(year, '-', month, '-', day)) AS day_of_week, " +
+                        "COUNT(*) AS appointment_count " +
+                        "FROM appointments " +
+                        "WHERE deleted_at IS NULL " +
+                        "AND CONCAT(year, '-', month, '-', day) BETWEEN #{startDate} AND #{endDate} " +
+                        "GROUP BY day_of_week " +
+                        "ORDER BY day_of_week")
+        List<Map<String, Object>> getWeeklyDistribution(@Param("startDate") String startDate,
+                        @Param("endDate") String endDate);
 }

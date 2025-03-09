@@ -48,7 +48,7 @@ public class SecurityConfiguration {
         return http
                 .authorizeHttpRequests(conf -> conf
                         .requestMatchers("/api/admin/login", "/api/admin/getkey", "/api/user/reg", "/api/auth/**",
-                                "/error", "/api/user/avatar", "/api/user/images/**")
+                                "/error", "/api/user/avatar", "/api/user/images/**", "/api/system/maintenance")
                         .permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())

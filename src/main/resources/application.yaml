@@ -33,3 +33,6 @@ mybatis-plus:
 
 file:
   upload-dir: D:\Project\JavaProject\study\HuiYi-health\img
+app:
+  backup:
+    dir: D:\Project\JavaProject\study\HuiYi-health\backups

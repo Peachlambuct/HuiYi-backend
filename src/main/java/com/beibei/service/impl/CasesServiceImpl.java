@@ -1,27 +1,30 @@
 package com.beibei.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import com.beibei.entity.dto.*;
+import com.beibei.service.*;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.beibei.entity.vo.request.CaseQuery;
 import com.beibei.entity.vo.request.CheckInfo;
 import com.beibei.entity.vo.request.ResponseCaseInfoVO;
 import com.beibei.entity.vo.response.CaseInfoVO;
 import com.beibei.entity.vo.response.CheckItemVO;
 import com.beibei.mapper.CasesMapper;
-import com.beibei.service.*;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.Resource;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import jakarta.annotation.Resource;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -41,11 +44,23 @@ public class CasesServiceImpl extends ServiceImpl<CasesMapper, Cases> implements
     private ChecksService checksService;
     @Resource
     private CheckProjectsService checkProjectsService;
+    @Lazy
+    @Resource
+    private AppointmentsService appointmentsService;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateCase(ResponseCaseInfoVO vo) {
+        Long aid = this.getById(vo.getId()).getAid();
         Cases cases = new Cases();
+        cases.setAid(aid);
         BeanUtil.copyProperties(vo, cases);
+        if (StrUtil.isNotBlank(vo.getContent())&& cases.getAid() != null) {
+            Appointments appointments = appointmentsService.getById(cases.getAid());
+            appointments.setStatus(true);
+            appointmentsService.updateById(appointments);
+            cases.setStatus(true);
+        }
         this.updateById(cases);
     }
 

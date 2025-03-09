@@ -9,6 +9,13 @@ import com.beibei.entity.vo.response.AuthorizeVO;
 import com.beibei.entity.vo.response.CountResponseVO;
 import com.beibei.entity.vo.response.DoctorCard;
 import com.beibei.entity.vo.response.PatientInfoVO;
+import com.beibei.entity.vo.response.DashboardDataVO;
+import com.beibei.entity.vo.response.AppointmentWeekDistributionVO;
+import com.beibei.entity.vo.response.PatientGrowthTrendVO;
+import com.beibei.entity.vo.response.AppointmentStatsVO;
+import com.beibei.entity.vo.response.PatientStatsVO;
+import com.beibei.entity.vo.response.MedicalRecordStatsVO;
+import com.beibei.entity.vo.response.CheckProjectStatsVO;
 import com.beibei.service.AdminService;
 import com.beibei.utils.JwtUtils;
 import jakarta.annotation.Resource;
@@ -108,5 +115,61 @@ public class AdminController {
     public RestBean<Void> delPatient(@RequestParam("id") Long id) {
         adminService.deletePatient(id);
         return RestBean.success();
+    }
+
+    /**
+     * 获取仪表盘数据
+     */
+    @GetMapping("/dashboard")
+    public RestBean<DashboardDataVO> getDashboardData() {
+        return RestBean.success(adminService.getDashboardData());
+    }
+
+    /**
+     * 获取今日预约统计数据
+     */
+    @GetMapping("/stats/appointment")
+    public RestBean<AppointmentStatsVO> getAppointmentStats() {
+        return RestBean.success(adminService.getAppointmentStats());
+    }
+
+    /**
+     * 获取患者统计数据
+     */
+    @GetMapping("/stats/patient")
+    public RestBean<PatientStatsVO> getPatientStats() {
+        return RestBean.success(adminService.getPatientStats());
+    }
+
+    /**
+     * 获取医疗记录统计数据
+     */
+    @GetMapping("/stats/medical")
+    public RestBean<MedicalRecordStatsVO> getMedicalRecordStats() {
+        return RestBean.success(adminService.getMedicalRecordStats());
+    }
+
+    /**
+     * 获取检查项目统计数据
+     */
+    @GetMapping("/stats/check")
+    public RestBean<CheckProjectStatsVO> getCheckProjectStats() {
+        return RestBean.success(adminService.getCheckProjectStats());
+    }
+
+    /**
+     * 获取每周预约分布数据
+     */
+    @GetMapping("/stats/appointment/weekly")
+    public RestBean<AppointmentWeekDistributionVO> getAppointmentWeeklyDistribution() {
+        return RestBean.success(adminService.getAppointmentWeeklyDistribution());
+    }
+
+    /**
+     * 获取患者增长趋势数据
+     */
+    @GetMapping("/stats/patient/growth")
+    public RestBean<PatientGrowthTrendVO> getPatientGrowthTrend() {
+        return RestBean.success(adminService.getPatientGrowthTrend());
     }
 }

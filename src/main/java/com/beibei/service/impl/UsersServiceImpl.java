@@ -65,4 +65,12 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
                 .roles(user.getRole())
                 .build();
     }
+
+    @Override
+    public void removeNonAdminUsers() {
+        QueryWrapper<Users> wrapper = new QueryWrapper<>();
+        wrapper.ne("role", "admin");
+        this.remove(wrapper);
+        log.info("已删除所有非管理员用户");
+    }
 }

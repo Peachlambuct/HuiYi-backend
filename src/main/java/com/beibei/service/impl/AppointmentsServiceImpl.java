@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -183,10 +184,10 @@ public class AppointmentsServiceImpl extends ServiceImpl<AppointmentsMapper, App
             throw new RuntimeException("Patient ID not found for user ID: " + userId);
         }
         List<AppointmentCardVO> appointmentCards = baseMapper.getAppointmentCardsByUserId(patientId);
-        appointmentCards.stream()
+        return appointmentCards.stream()
                 .filter(it -> !it.isStatus())
-                .forEach(it -> it.setDate(constructDate(it.getYear(), it.getMonth(), it.getDay(), it.getTimeId())));
-        return appointmentCards;
+                .peek(it -> it.setDate(constructDate(it.getYear(), it.getMonth(), it.getDay(), it.getTimeId())))
+                .toList();
     }
 
     @Override
